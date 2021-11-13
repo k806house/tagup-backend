@@ -1,3 +1,5 @@
+from difflib import SequenceMatcher
+
 import numpy as np
 import pandas as pd
 import spacy
@@ -8,6 +10,7 @@ from spellchecker import SpellChecker
 from transliterate import translit
 
 MODEL_PATH = 'models/word2vec_clean5.model'
+SIMILARITY_THRESHOLD = 0.8
 
 
 class TagGenerator:
@@ -34,9 +37,10 @@ class TagGenerator:
         for noun in nouns:
             for match, similarity in self.model.wv.most_similar(noun):
                 # print(match, similarity)
-                # if words are identical, e.g. iphone and айфон
-                # if similarity > 0.80:
-                #     continue
+                similarity = SequenceMatcher(a=noun, b=match).ratio()
+                if similarity >= SIMILARITY_THRESHOLD:
+                    continue
+
                 proposals.append((match, similarity))
 
         return proposals
