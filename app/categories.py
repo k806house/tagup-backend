@@ -58,3 +58,44 @@ class Categories:
     @staticmethod
     def _match(category, query):
         return category.lower() == query.lower()
+
+
+class NonProduct:
+    def __init__(self, data):
+        self.data = data
+
+
+    @classmethod
+    def from_file(cls, filepath):
+        with open(filepath) as f:
+            data = json.load(f)
+
+        data = to_sets(data, True)
+
+        nonproduct = cls(data)
+        return nonproduct
+
+    def check_is_non_product(self, query):
+        for record in self.data:
+            if query in record['query']:
+                return (
+                    True,
+                    {
+                        'tag': record['tags'],
+                        'isRouting': 'true',
+                        'ref': record['link']
+                    }
+                )
+
+        return (False, None)
+
+
+def to_sets(o, start):
+    if start:
+        return [to_sets(v, False) for v in o]
+    elif isinstance(o, list):
+        return {to_sets(v, False) for v in o}
+    elif isinstance(o, dict):
+        return {k: to_sets(v, False) for k, v in o.items()}
+    return o
+
