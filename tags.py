@@ -20,6 +20,7 @@ class TagGenerator:
         self.nlp = spacy.load("ru_core_news_md")
 
     def generate(self, query):
+        print("Initialized")
         similar = self.__try_find_similar(query)
         extended = self.__try_predict_next(query)
         return similar, extended
@@ -35,22 +36,37 @@ class TagGenerator:
 
         proposals = []
         for noun in nouns:
+            used_matches = set()
             for match, semantic_similarity in self.model.wv.most_similar(noun):
+                if match in used_matches:
+                    continue
+                match = self.spell_checker.correction(match)
+                if match in used_matches:
+                    continue
+
                 similarity = SequenceMatcher(a=noun, b=match).ratio()
-                # print(match, semantic_similarity, similarity)
                 if similarity >= SIMILARITY_THRESHOLD:
                     continue
 
+                used_matches.add(match)
                 proposals.append((match, semantic_similarity))
 
         return proposals
 
     def __try_predict_next(self, query):
-        tokenized = list(tokenize(str(query).lower()))
-        return [
-            (f'{query} {nxt}', confidence)
-            for nxt, confidence in self.model.predict_output_word(tokenized)
-        ]
+        tokenized = list(tokenize(self.spell_checker.correction(str(query).lower())))
+        used = set()
+        proposals = []
+        for nxt, confidence in self.model.predict_output_word(tokenized):
+            if nxt in used:
+                continue
+            nxt = self.spell_checker.correction(nxt)
+            if nxt in used:
+                continue
+
+            used.add(nxt)
+            proposals.append((f'{query} {nxt}', confidence))
+        return proposals
 
 
 if __name__ == '__main__':
