@@ -43,7 +43,10 @@ class TagGenerator:
 
     def __try_predict_next(self, query):
         tokenized = list(tokenize(str(query).lower()))
-        return self.model.predict_output_word(tokenized)
+        return [
+            (f'{query} {nxt}', confidence)
+            for nxt, confidence in self.model.predict_output_word(tokenized)
+        ]
 
 
 if __name__ == '__main__':
