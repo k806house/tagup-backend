@@ -35,13 +35,13 @@ class TagGenerator:
 
         proposals = []
         for noun in nouns:
-            for match, similarity in self.model.wv.most_similar(noun):
-                # print(match, similarity)
+            for match, semantic_similarity in self.model.wv.most_similar(noun):
                 similarity = SequenceMatcher(a=noun, b=match).ratio()
+                # print(match, semantic_similarity, similarity)
                 if similarity >= SIMILARITY_THRESHOLD:
                     continue
 
-                proposals.append((match, similarity))
+                proposals.append((match, semantic_similarity))
 
         return proposals
 
