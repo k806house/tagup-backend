@@ -3,13 +3,13 @@ import json
 from flask import Blueprint, Flask, request, Response
 from flask_cors import CORS
 
-from categories import Categories
+from categories import Categories, NonProduct
 
 wb = Blueprint('wb', __name__)
 CORS(wb)
 
 categories = Categories.from_file('categories-tree.json')
-
+nonproduct = NonProduct.from_file('nonproductqueries.json')
 
 @wb.route('/tags', methods=['GET'])
 def get_tags():
@@ -21,8 +21,20 @@ def get_tags():
 
     data = request.args
     query = data['query']
+    # query = "поддержка"
+
+    is_non_product, res = nonproduct.check_is_non_product(query)
+
+    if is_non_product:
+        return Response(
+            json.dumps({'status': 'ok', 'data': [res]}, ensure_ascii=False).encode('utf8'),
+            status=200,
+            content_type='application/json; charset=utf-8'
+        )
+
+    # тут давид
+
     res = categories.find_by_category('кейп')
-    print(res)
 
     return Response(
         json.dumps({'status': 'ok', 'data': res}, ensure_ascii=False).encode('utf8'),

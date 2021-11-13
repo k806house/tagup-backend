@@ -1,0 +1,47 @@
+[
+    {
+        "query": ["как отменить заказ","отмена заказа, отменить заказ"],
+        "tags": "отмена заказа",
+        "link": "https://www.wildberries.ru/lk/myorders/delivery"
+    },
+    {
+        "query": ["где мой заказ", "когда придет заказ", "стасус заказа", "статус доставки"],
+        "tags": "статус заказа",
+        "link": "https://www.wildberries.ru/lk/myorders/delivery"
+    },
+    {
+        "query": ["история заказов", "мои заказы", "мои покупки"],
+        "tags": "история заказов",
+        "link": "https://www.wildberries.ru/lk/myorders/archive"
+    },
+    {
+        "query": ["чат поддержки", "поддержка", "связаться с оператором", "колл центр"],
+        "tags": "поддержка",
+        "link": "https://www.wildberries.ru/lk/communications"
+    },
+    {
+        "query": ["мне нравится", "избранное", "любимое"],
+        "tags": "избранное",
+        "link": "https://www.wildberries.ru/lk/favorites"
+    },
+    {
+        "query": ["как вернуть товар", "возврат", "возврат заказа", "как вернуть заказ"],
+        "tags": "возврат заказа",
+        "link": "https://www.wildberries.ru/services/voprosy-i-otvety"
+    },
+    {
+        "query": ["как сменить телефон", "смена почты", "мой профиль", "личный кабинет", "изменить имя"],
+        "tags": "профиль",
+        "link": "https://www.wildberries.ru/lk/details"
+    },
+    {
+        "query": ["регистрация", "оформление заказа", "поиск и выбор товара", "оплата заказа", "отказ от заказа", "скидки", "доставка товаров", "возврат денег"],
+        "tags": "вопросы и ответы",
+        "link": "https://www.wildberries.ru/services/voprosy-i-otvety?desktop=1"
+    },
+    {
+        "query": ["как изменить адрес", "как изменить адрес доставки", "адреса доставки", "пункты самовывоза"],
+        "tags": "изменение адреса",
+        "link": "https://www.wildberries.ru/services/besplatnaya-dostavka?desktop=1#terms-delivery"
+    }
+]
