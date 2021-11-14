@@ -25,7 +25,6 @@ def get_tags():
 
     data = request.args
     query = data['query']
-    # query = "поддержка"
 
     is_non_product, res = nonproduct.check_is_non_product(query)
 
