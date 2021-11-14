@@ -11,3 +11,7 @@
 ```bash
 ./run_dev
 ```
+
+### Фронт
+
+[tagup-frontend](https://github.com/k806house/tagup-frontend)
