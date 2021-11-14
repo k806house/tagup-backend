@@ -82,7 +82,7 @@ class NonProduct:
                     True,
                     {
                         'tag': record['tags'],
-                        'isRouting': 'true',
+                        'isRouting': True,
                         'ref': record['link']
                     }
                 )

@@ -1,5 +1,6 @@
 import json
 import random
+import itertools
 
 from flask import Blueprint, Flask, request, Response
 from flask_cors import CORS
@@ -40,17 +41,16 @@ def get_tags():
 
     # stage 2: get suggests
     suggests = tg.generate(query)
-    suggests = suggests[0]
-    #suggests = str(suggest)
 
     # stage 3: matching suggests in tree
-    suggest_matches = direct_suggest_matching(suggests)
+    suggest_matches = direct_suggest_matching(suggests[0])
 
     # merge matches from tree
     tree_matches = direct_matches + suggest_matches
-    suggest_count = min(7, len(suggests))
+    suggest_count = min(7, len(suggests[0]) + len(suggests[1]))
     response = result_proccess(tree_matches, suggests, suggest_max_count=suggest_count)
 
+    print(response)
     return Response(
         json.dumps({'status': 'ok', 'data': response}, ensure_ascii=False).encode('utf8'),
         status=200,
@@ -87,10 +87,19 @@ def result_proccess(tree_matches, suggests,
 
     # если в саджестах больше suggest_max_count матчей,
     # обрезаем его
-    suggest_count = len(suggests)
+    suggests_merged = []
+    for i, j in itertools.zip_longest(suggests[0], suggests[1]):
+        if i is not None:
+            suggests_merged.append(i)
+        if j is not None:
+            suggests_merged.append(j)
+
+    suggest_count = len(suggests_merged)
     if suggest_count > suggest_max_count:
-        suggests = suggests[:suggest_max_count]
+        suggests_merged = suggests_merged[:suggest_max_count]
         suggest_count = suggest_max_count
+
+    suggest_names = [i[0] for i in suggests_merged]
 
     # если есть соседние категории в листе, то берем их
     # если нет, то берем категории по пути к корню
@@ -111,7 +120,7 @@ def result_proccess(tree_matches, suggests,
                 if cur >= match_count:
                     break
 
-                if i != match_in_tree['match']:
+                if i != match_in_tree['match'] and i.lower() not in suggest_names:
                     result.append(i)
                     cur += 1
         else:
@@ -119,25 +128,25 @@ def result_proccess(tree_matches, suggests,
                 if cur >= match_count:
                     break
 
-                if i != match_in_tree['match']:
+                if i != match_in_tree['match'] and i.lower() not in suggest_names:
                     result.append(i)
                     cur += 1
 
         del match_in_tree
 
     response = []
-    for suggest in suggests:
+    for suggest in suggests_merged:
         name, _ = suggest
         response.append({
             'tag': name.lower(),
-            'isRouting': 'false',
+            'isRouting': False,
             'ref': ''
         })
 
     for name in result:
         response.append({
             'tag': name.lower(),
-            'isRouting': 'false',
+            'isRouting': False,
             'ref': ''
         })
 
