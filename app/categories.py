@@ -57,7 +57,7 @@ class Categories:
 
     @staticmethod
     def _match(category, query):
-        return category.lower() == query.lower()
+        return query.lower() in category.lower()
 
 
 class NonProduct:
