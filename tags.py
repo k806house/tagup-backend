@@ -61,7 +61,7 @@ class TagGenerator:
             used_matches = set()
             for match, semantic_similarity in self.model.wv.most_similar(noun):
                 match = self.__spell_check(match)
-                match = self.nlp(match)[0].lemma_
+                # match = self.nlp(match)[0].lemma_
                 if semantic_similarity < SEMANTIC_SIMILARITY_THRESHOLD \
                 or are_similar(noun, match) \
                 or contains_fuzzy(used_matches, match):
